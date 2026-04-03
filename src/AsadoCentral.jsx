@@ -39,53 +39,56 @@ const Navbar = () => {
 
 export default function AsadoCentral() {
   const containerRef = useRef(null);
-  const videoRef = useRef(null);
+  const asmrVideoRef = useRef(null);
+  const expVideoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Audio Activation on first scroll
+      // Audio Activation & Smooth Fade-in
       ScrollTrigger.create({
         trigger: 'body',
         start: 'top 5%',
         onEnter: () => {
-          if (videoRef.current && videoRef.current.muted) {
-            videoRef.current.muted = false;
+          if (asmrVideoRef.current && asmrVideoRef.current.muted) {
+            asmrVideoRef.current.muted = false;
+            asmrVideoRef.current.volume = 0;
+            gsap.to(asmrVideoRef.current, { volume: 1, duration: 2 });
             setIsMuted(false);
           }
         },
         once: true
       });
 
-      // Video Source Transition & Fade
+      // VOLUME MAPPING: Fade out ASMR as we leave Hero
+      gsap.to(asmrVideoRef.current, {
+        scrollTrigger: {
+          trigger: '.hero-section',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+          onUpdate: (self) => {
+            if (asmrVideoRef.current && !isMuted) {
+              asmrVideoRef.current.volume = 1 - self.progress;
+            }
+          }
+        }
+      });
+
+      // Video Cross-fade (ASMR to Experience)
       ScrollTrigger.create({
         trigger: '#experiencia',
         start: 'top 80%',
+        end: 'top 20%',
+        scrub: true,
         onEnter: () => {
-          gsap.to(videoRef.current, { 
-            opacity: 0, 
-            duration: 0.8, 
-            onComplete: () => {
-              if (videoRef.current) {
-                videoRef.current.src = "/The_Smoky_Tira_de_Asado_version_1.mp4";
-                videoRef.current.play().catch(e => console.log("Video play error:", e));
-                gsap.to(videoRef.current, { opacity: 1, duration: 0.8 });
-              }
-            }
-          });
+          gsap.to(asmrVideoRef.current, { opacity: 0, duration: 1 });
+          gsap.to(expVideoRef.current, { opacity: 1, duration: 1 });
+          if (expVideoRef.current) expVideoRef.current.play().catch(() => {});
         },
         onLeaveBack: () => {
-          gsap.to(videoRef.current, { 
-            opacity: 0, 
-            duration: 0.8, 
-            onComplete: () => {
-              if (videoRef.current) {
-                videoRef.current.src = "/asado-asmr.mp4";
-                videoRef.current.play().catch(e => console.log("Video play error:", e));
-                gsap.to(videoRef.current, { opacity: 1, duration: 0.8 });
-              }
-            }
-          });
+          gsap.to(asmrVideoRef.current, { opacity: 1, duration: 1 });
+          gsap.to(expVideoRef.current, { opacity: 0, duration: 1 });
         }
       });
 
@@ -131,17 +134,16 @@ export default function AsadoCentral() {
   }, []);
 
   const toggleSound = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted;
-      setIsMuted(videoRef.current.muted);
+    const v = asmrVideoRef.current;
+    if (v) {
+      v.muted = !v.muted;
+      setIsMuted(v.muted);
     }
   };
 
   return (
     <div ref={containerRef} className="text-white min-h-screen font-['Manrope'] overflow-x-hidden">
       <style dangerouslySetInnerHTML={{__html: `
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,500&family=Montserrat:wght@700;900&family=Space+Grotesk:wght@400;700&family=Manrope:wght@300;400;600&display=swap');
-        
         .misty-gradient {
           background: linear-gradient(135deg, #96ccff 0%, #ffffff 100%);
           -webkit-background-clip: text;
@@ -238,7 +240,7 @@ export default function AsadoCentral() {
 
       <div className="grain-overlay"></div>
       <video 
-        ref={videoRef}
+        ref={asmrVideoRef}
         autoPlay 
         muted 
         loop 
@@ -246,6 +248,16 @@ export default function AsadoCentral() {
         className="global-bg"
       >
         <source src="/asado-asmr.mp4" type="video/mp4" />
+      </video>
+      <video 
+        ref={expVideoRef}
+        muted 
+        loop 
+        playsInline 
+        style={{ opacity: 0 }}
+        className="global-bg"
+      >
+        <source src="/The_Smoky_Tira_de_Asado_version_1.mp4" type="video/mp4" />
       </video>
       <div className="global-overlay"></div>
       <Navbar />
