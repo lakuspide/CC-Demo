@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.agents/
+.windsurf/
+skills-lock.json
+*.txt
+Video 1 (1).mp4
+pdf_menu.pdf
+"Menú de Restaurante Argentino"
+CC-Demo-analysis/
+.DS_Store
+.env
+.ipynb_checkpoints/
