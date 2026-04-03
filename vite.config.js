@@ -7,16 +7,5 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: true
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor-ui': ['framer-motion', 'gsap', 'lucide-react'],
-          'vendor-react': ['react', 'react-dom']
-        }
-      }
-    },
-    chunkSizeWarningLimit: 600
   }
 })
