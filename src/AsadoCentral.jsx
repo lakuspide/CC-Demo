@@ -50,17 +50,19 @@ export default function AsadoCentral() {
         trigger: 'body',
         start: 'top 5%',
         onEnter: () => {
-          if (asmrVideoRef.current && asmrVideoRef.current.muted) {
-            asmrVideoRef.current.muted = false;
-            asmrVideoRef.current.volume = 0;
-            gsap.to(asmrVideoRef.current, { volume: 1, duration: 2 });
+          const v = asmrVideoRef.current;
+          if (v && v.muted) {
+            v.muted = false;
+            v.volume = 0;
+            v.play().catch(() => {}); // Force play on user interaction
+            gsap.to(v, { volume: 1, duration: 2 });
             setIsMuted(false);
           }
         },
         once: true
       });
 
-      // VOLUME MAPPING: Fade out ASMR as we leave Hero
+      // VOLUME MAPPING: Fade out ASMR as we leave Hero (Direct access to video property)
       gsap.to(asmrVideoRef.current, {
         scrollTrigger: {
           trigger: '.hero-section',
@@ -68,8 +70,9 @@ export default function AsadoCentral() {
           end: 'bottom top',
           scrub: true,
           onUpdate: (self) => {
-            if (asmrVideoRef.current && !isMuted) {
-              asmrVideoRef.current.volume = 1 - self.progress;
+            const v = asmrVideoRef.current;
+            if (v && !v.muted) {
+              v.volume = Math.max(0, 1 - self.progress);
             }
           }
         }
@@ -245,6 +248,7 @@ export default function AsadoCentral() {
         muted 
         loop 
         playsInline 
+        style={{ opacity: 1 }}
         className="global-bg"
       >
         <source src="/asado-asmr.mp4" type="video/mp4" />
