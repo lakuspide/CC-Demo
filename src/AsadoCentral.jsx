@@ -87,7 +87,10 @@ export default function AsadoCentral() {
         onEnter: () => {
           gsap.to(asmrVideoRef.current, { opacity: 0, duration: 1 });
           gsap.to(expVideoRef.current, { opacity: 1, duration: 1 });
-          if (expVideoRef.current) expVideoRef.current.play().catch(() => {});
+          if (expVideoRef.current) {
+             expVideoRef.current.preload = "auto"; // Start loading only when needed
+             expVideoRef.current.play().catch(() => {});
+          }
         },
         onLeaveBack: () => {
           gsap.to(asmrVideoRef.current, { opacity: 1, duration: 1 });
@@ -250,6 +253,7 @@ export default function AsadoCentral() {
         playsInline 
         style={{ opacity: 1 }}
         className="global-bg"
+        preload="auto"
       >
         <source src="/asado-asmr.mp4" type="video/mp4" />
       </video>
@@ -260,6 +264,7 @@ export default function AsadoCentral() {
         playsInline 
         style={{ opacity: 0 }}
         className="global-bg"
+        preload="none"
       >
         <source src="/The_Smoky_Tira_de_Asado_version_1.mp4" type="video/mp4" />
       </video>
@@ -313,7 +318,7 @@ export default function AsadoCentral() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16 bg-black/40 p-8 md:p-12 rounded-[40px] backdrop-blur-sm border border-white/5 floating-item">
           <div className="w-full md:w-1/2">
             <div className="relative overflow-hidden rounded-2xl aspect-[4/5]">
-               <img src="https://images.pexels.com/photos/410648/pexels-photo-410648.jpeg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-110 hover:scale-100" alt="Parrilla tradicional" />
+               <img src="https://images.pexels.com/photos/410648/pexels-photo-410648.jpeg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-110 hover:scale-100" alt="Parrilla tradicional" loading="lazy" />
             </div>
           </div>
           <div className="w-full md:w-1/2 space-y-8">
