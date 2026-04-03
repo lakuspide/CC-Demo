@@ -1,22 +1,19 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import SensoryLoader from './components/SensoryLoader';
-
-const AsadoCentral = lazy(() => import('./AsadoCentral'));
+import AsadoCentral from './AsadoCentral';
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <>
+    <div className="bg-[#0d0d0d] min-h-screen">
       <AnimatePresence>
         {!isLoaded && <SensoryLoader key="loader" ON_LOAD_COMPLETE={() => setIsLoaded(true)} />}
       </AnimatePresence>
       
-      <Suspense fallback={null}>
-        <AsadoCentral />
-      </Suspense>
-    </>
+      <AsadoCentral />
+    </div>
   );
 }
 
