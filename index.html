@@ -11,7 +11,19 @@
     <script defer src="https://analytics.myvpsdemo.cloud/script.js" data-website-id="e969b131-9fa9-433d-b387-86aaf51a4525"></script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      {/* PANTALLA DE EMERGENCIA (Se quita sola cuando carga React) */}
+      <div style="background-color: #0d0d0d; position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 9999; font-family: sans-serif; overflow: hidden;">
+        <div style="position: absolute; inset: 0; background-image: url('/coming-soon.png'); background-size: cover; background-position: center; filter: brightness(0.5);"></div>
+        <div style="position: relative; z-index: 10; text-align: center; color: white;">
+          <p style="text-transform: uppercase; letter-spacing: 0.5em; font-size: 10px; color: #FF4D4D; margin-bottom: 20px; font-weight: bold;">El Ritual del Fuego</p>
+          <h1 style="font-size: 40px; margin: 0; font-weight: 900; letter-spacing: -2px;">ASADO CENTRAL</h1>
+          <div style="margin-top: 40px; border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 50px; display: inline-block;">
+            <span style="text-transform: uppercase; letter-spacing: 0.3em; font-size: 10px; color: rgba(255,255,255,0.4);">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
